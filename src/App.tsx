@@ -4,6 +4,80 @@
  */
 
 import { motion } from "motion/react";
+import { useState } from "react";
+
+function Calculator() {
+  const [display, setDisplay] = useState("0");
+  const [equation, setEquation] = useState("");
+
+  const handleNumber = (n: string) => {
+    setDisplay(prev => (prev === "0" ? n : prev + n));
+  };
+
+  const handleOperator = (op: string) => {
+    setEquation(display + " " + op + " ");
+    setDisplay("0");
+  };
+
+  const calculate = () => {
+    try {
+      const parts = equation.split(" ");
+      const firstNum = parseFloat(parts[0]);
+      const operator = parts[1];
+      const secondNum = parseFloat(display);
+      let result = 0;
+
+      switch (operator) {
+        case "+": result = firstNum + secondNum; break;
+        case "-": result = firstNum - secondNum; break;
+        case "*": result = firstNum * secondNum; break;
+        case "/": result = firstNum / secondNum; break;
+      }
+
+      setDisplay(String(result));
+      setEquation("");
+    } catch (e) {
+      setDisplay("Error");
+    }
+  };
+
+  const clear = () => {
+    setDisplay("0");
+    setEquation("");
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 1.4 }}
+      className="mt-12 bg-white border border-gray-100 p-6 rounded-sm shadow-sm w-full max-w-[280px]"
+    >
+      <div className="text-right mb-4">
+        <div className="text-[10px] text-gray-300 uppercase tracking-widest h-4">{equation}</div>
+        <div className="text-2xl font-light tracking-tight">{display}</div>
+      </div>
+      <div className="grid grid-cols-4 gap-2 text-[11px] font-medium text-gray-600">
+        <button onClick={clear} className="p-3 hover:bg-gray-50 flex items-center justify-center border border-gray-50 uppercase tracking-widest text-[9px]">C</button>
+        <button onClick={() => handleOperator("/")} className="p-3 hover:bg-gray-50 border border-gray-50">/</button>
+        <button onClick={() => handleOperator("*")} className="p-3 hover:bg-gray-50 border border-gray-50">×</button>
+        <button onClick={() => handleOperator("-")} className="p-3 hover:bg-gray-50 border border-gray-50">-</button>
+        <button onClick={() => handleNumber("7")} className="p-3 hover:bg-gray-50 border border-gray-50">7</button>
+        <button onClick={() => handleNumber("8")} className="p-3 hover:bg-gray-50 border border-gray-50">8</button>
+        <button onClick={() => handleNumber("9")} className="p-3 hover:bg-gray-50 border border-gray-50">9</button>
+        <button onClick={() => handleOperator("+")} className="p-3 hover:bg-gray-50 border border-gray-50">+</button>
+        <button onClick={() => handleNumber("4")} className="p-3 hover:bg-gray-50 border border-gray-50">4</button>
+        <button onClick={() => handleNumber("5")} className="p-3 hover:bg-gray-50 border border-gray-50">5</button>
+        <button onClick={() => handleNumber("6")} className="p-3 hover:bg-gray-50 border border-gray-50">6</button>
+        <button onClick={calculate} className="p-3 bg-[#111111] text-white row-span-3 flex items-center justify-center font-bold">=</button>
+        <button onClick={() => handleNumber("1")} className="p-3 hover:bg-gray-50 border border-gray-50">1</button>
+        <button onClick={() => handleNumber("2")} className="p-3 hover:bg-gray-50 border border-gray-50">2</button>
+        <button onClick={() => handleNumber("3")} className="p-3 hover:bg-gray-50 border border-gray-50">3</button>
+        <button onClick={() => handleNumber("0")} className="p-3 hover:bg-gray-50 border border-gray-50 col-span-3">0</button>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function App() {
   return (
@@ -72,6 +146,8 @@ export default function App() {
         >
           La simplicidad es la máxima sofisticación.
         </motion.p>
+
+        <Calculator />
       </div>
 
       {/* Decorative Bottom Elements */}
